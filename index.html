@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Letter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #ffafbd, #ffc3a0);
+        }
+        .container {
+            position: relative;
+            width: 300px;
+            height: 200px;
+        }
+        .envelope {
+            width: 100%;
+            height: 100%;
+            background: url('https://i.imgur.com/VJ4fCUb.png') no-repeat center/cover;
+            position: absolute;
+        }
+        .letter {
+            width: 80%;
+            height: 80%;
+            background: #fff5e1;
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.5;
+            max-height: 150px;
+            word-wrap: break-word;
+            border: 2px solid #ff6f61;
+            border-radius: 10px;
+            color: #333;
+            text-align: center;
+        }
+        textarea {
+            width: 80%;
+            height: 100px;
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 14px;
+            border: 2px solid #ff6f61;
+            border-radius: 5px;
+            resize: none;
+        }
+        button {
+            margin-top: 10px;
+            background: #ff6f61;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #e55b50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="envelope" id="envelope"></div>
+        <div class="letter" id="letter">Your saved letter will appear here...</div>
+    </div>
+    
+    <textarea id="letterInput" placeholder="Write your message here..."></textarea>
+    <button onclick="saveLetter()">Save Letter</button>
+
+    <script>
+        function saveLetter() {
+            let message = document.getElementById("letterInput").value;
+            localStorage.setItem("savedLetter", message);
+            document.getElementById("letter").innerText = message;
+        }
+
+        window.onload = function() {
+            let savedMessage = localStorage.getItem("savedLetter");
+            if (savedMessage) {
+                document.getElementById("letter").innerText = savedMessage;
+            }
+        };
+
+        gsap.to("#envelope", { duration: 1, y: -50, ease: "power2.out" });
+        gsap.to("#letter", { duration: 1.5, y: -100, opacity: 1, delay: 1, onComplete: function() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }});
+    </script>
+</body>
+</html>
